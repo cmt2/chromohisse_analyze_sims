@@ -21,7 +21,7 @@ delta_a ~ dnExponential(2)
 moves[++mvi] = mvScale(delta_a, lambda = 0.2)
 delta_b := delta_a
 
-moves[++mvi] = mvUpDownSlide(weight=2, lambda = 0.1)
+moves[++mvi] = mvUpDownScale(weight=2, lambda = 0.1)
 moves[mvi].addVariable(gamma_a, up = TRUE)
 moves[mvi].addVariable(delta_a, up = FALSE)
 
