@@ -1,14 +1,19 @@
+dataset  = PLACEHOLDER
+treefile = "data/sim" + dataset + ".tre"
+datafile = "data/sim" + dataset + ".tsv"
+outfile  = "output/chromohisse_sim" + dataset + ".log"
+
 loadPlugin("TensorPhylo")
 print("Marker 1… TensorPhylo")
 
 k    = 16
-tree = readTrees("data/sim1.tre")[1]
+tree = readTrees(treefile)[1]
 age  = tree.rootAge()
 taxa = tree.taxa()
 seed(1)
 print("Marker 2… tree")
 
-data = readCharacterDataDelimited("data/sim1.tsv", stateLabels=2 * k + 2, type="NaturalNumbers", delimiter="\t", header=FALSE)
+data = readCharacterDataDelimited(datafile, stateLabels=2 * k + 2, type="NaturalNumbers", delimiter="\t", header=FALSE)
 print("Marker 3… character data")
 
 mvi = 0
@@ -395,7 +400,7 @@ print("Marker 9… my_model")
 
 # monitors
 monitors[1] = mnScreen(printgen=1)
-monitors[2] = mnModel(printgen=1, file="output/sim1.log", exclude = ["clado_probs", "lambda", "mu"])
+monitors[2] = mnModel(printgen=1, file=outfile, exclude = ["clado_probs", "lambda", "mu"])
 # monitors[3] = mnStochasticCharacterMap(glhbdsp = x, printgen = 50, filename = "output/maps_sim1.log", include_simmap = true)
 # monitors[3] = mnJointConditionalAncestralState(filename="output/anc_states_sim1.log", printgen=1, tree=tree, cdbdp=x, withStartStates=true, type="NaturalNumbers")
 print("Marker 10… monitors")
@@ -406,6 +411,6 @@ print("Marker 11… my_mcmc")
 
 # my_mcmc.initializeFromCheckpoint("output/chromohisse_dryopt_hidden_mrm.state") # to restart from checkpoint
 my_mcmc.burnin(1000, tuningInterval=50)
-my_mcmc.run(generations=25000, checkpointInterval=100, checkpointFile="output/sim_1.state")
+my_mcmc.run(generations=25000)
 
 q()
