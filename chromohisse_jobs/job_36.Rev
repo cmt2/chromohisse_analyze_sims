@@ -1,4 +1,4 @@
-dataset  = PLACEHOLDER
+dataset  = 36
 treefile = "data/sim" + dataset + ".tre"
 datafile = "data/sim" + dataset + ".tsv"
 outfile  = "output/chromohisse_sim" + dataset + ".log"
@@ -381,7 +381,7 @@ x ~ dnGLHBDSP(rootAge   = age,
               condition = condition,
               taxa      = taxa,
               nStates   = 2 * (k + 1),
-              nProc     = 4,
+              nProc     = 3,
 		      zeroIndex = FALSE)
 print("Marker 5… GLHBDSP")
 

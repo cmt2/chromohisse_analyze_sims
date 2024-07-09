@@ -3,7 +3,7 @@ treefile = "data/sim" + dataset + ".tre"
 datafile = "data/sim" + dataset + ".tsv"
 outfile  = "output/chromosse_sim" + dataset + ".log"
 
-loadPlugin("TensorPhylo")
+loadPlugin("TensorPhylo", "/home/mrmay/.plugins")
 print("Marker 1… TensorPhylo")
 
 k    = 16
