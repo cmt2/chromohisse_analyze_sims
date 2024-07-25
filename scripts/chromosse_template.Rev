@@ -1,6 +1,6 @@
 dataset  = PLACEHOLDER
 treefile = "data/sim" + dataset + ".tre"
-datafile = "data/sim" + dataset + ".tsv"
+datafile = "data/sim" + dataset + "_sse.tsv"
 outfile  = "output/chromosse_sim" + dataset + ".log"
 
 loadPlugin("TensorPhylo", "/home/mrmay/.plugins")
@@ -12,7 +12,7 @@ age  = tree.rootAge()
 taxa = tree.taxa()
 print("Marker 2… tree")
 
-data = readCharacterDataDelimited(datafile, stateLabels=2 * k + 2, type="NaturalNumbers", delimiter="\t", header=FALSE)
+data = readCharacterDataDelimited(datafile, stateLabels=k + 1, type="NaturalNumbers", delimiter="\t", header=FALSE)
 print("Marker 3… character data")
 
 mvi = 0
@@ -20,11 +20,9 @@ mvi = 0
 # rate matrix for chromosomes
 gamma_a ~ dnExponential(2)
 moves[++mvi] = mvScale(gamma_a, lambda = 0.2)
-gamma_b := gamma_a
 
 delta_a ~ dnExponential(2)
 moves[++mvi] = mvScale(delta_a, lambda = 0.2)
-delta_b := delta_a
 
 moves[++mvi] = mvUpDownScale(weight=2, lambda = 0.1)
 moves[mvi].addVariable(gamma_a, up = TRUE)
@@ -37,8 +35,8 @@ alpha <- 0
 
 # set up anagenetic matrix manually
 # empty matrix
-for(i in 1:(2*k+2)) {
-	for(j in 1:(2*k+2)) {
+for(i in 1:(k + 1)) {
+	for(j in 1:(k + 1)) {
 		r[i][j] <- 0.0
 	}
 }
@@ -48,20 +46,12 @@ for(i in 1:(k+1)) {
 	if (i == 1) {
 	} else if (i == k + 1) {
 		r[i][i-1] := delta_a
-		r[i+k+1][i-1+k+1] := delta_b
 	} else if (i == 2) {
 		r[i][i+1] := gamma_a
-		r[i+k+1][i+1+k+1] := gamma_b
 	} else {
 		r[i][i+1] := gamma_a
 		r[i][i-1] := delta_a
-
-		r[i+k+1][i+1+k+1] := gamma_b
-		r[i+k+1][i-1+k+1] := delta_b
 	}
-	r[i][i+k+1] := alpha
-	# r[i+k+1][i] := beta
-	r[i+k+1][i] := alpha
 }
 
 Q_combined := fnFreeK(r, rescale=FALSE)
@@ -97,20 +87,14 @@ chi               <- 0
 clado_polyploid <- 0.0
 clado_demipoly <- 0.0
 
-
 # write a very large loop thing that will build a matrix to account for transitions (add element for clado change between hidden using the chi rates)
 
 ne = 0
 clado_events[++ne] <- [1,1,1]
 clado_probs[ne]    := Probability(1.0)
 
-# cladogenetic transitions for the hidden state w/ 0 chromosomes
-clado_events[++ne] <- [1 + k + 1,1 + k + 1,1 + k + 1]
-clado_probs[ne]    := Probability(1.0)
-
 # also specify the speciation rates
 lambda[1] := 0
-lambda[k+2] := 0
 
 # right now no demipolyploidy
 for(i in 1:k) { # this index is the number of chromosomes
@@ -131,32 +115,6 @@ for(i in 1:k) { # this index is the number of chromosomes
 		clado_probs[ne]    := Probability(0.5 * (clado_fission_a + clado_polyploid) / lambda[idx])
 		clado_events[++ne] <- [idx, idx, idx + 1]
 		clado_probs[ne]    := Probability(0.5 * (clado_fission_a + clado_polyploid) / lambda[idx])
-
-		# transition between hidden states
-        clado_events[++ne] <- [idx, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-        clado_events[++ne] <- [idx, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-
-        # HIDDEN
-        # compute the total rate 
-		lambda[idx_hidden] := abs(clado_no_change_b + clado_fission_b + clado_polyploid + chi)
-
-        # no change
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden]
-        clado_probs[ne]    := Probability(clado_no_change_b / lambda[idx_hidden])
-        
-        # increase by one
-        clado_events[++ne] <- [idx_hidden, idx_hidden + 1, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * (clado_fission_b + clado_polyploid) / lambda[idx_hidden])
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden + 1]
-        clado_probs[ne]    := Probability(0.5 * (clado_fission_b + clado_polyploid) / lambda[idx_hidden])
-
-        # transition between hidden states
-        clado_events[++ne] <- [idx_hidden, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
 		
 	} else if ( i + i <= k ) { # polyploidization allowed
 		
@@ -185,44 +143,6 @@ for(i in 1:k) { # this index is the number of chromosomes
 		clado_events[++ne] <- [idx, idx, i + i + 1]
 		clado_probs[ne]    := Probability(0.5 * clado_polyploid / lambda[idx])
 
-		# transition between hidden states
-        clado_events[++ne] <- [idx, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-        clado_events[++ne] <- [idx, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-
-        # HIDDEN
-		# compute the total rate
-		lambda[idx_hidden] := abs(clado_no_change_b + clado_fission_b + clado_fusion_b + clado_polyploid + chi)
-		
-		# no change
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden]
-		clado_probs[ne]    := Probability(clado_no_change_b / lambda[idx_hidden])
-		
-		# increase by one
-		clado_events[++ne] <- [idx_hidden, idx_hidden + 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_fission_b / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden + 1]
-		clado_probs[ne]    := Probability(0.5 * clado_fission_b / lambda[idx_hidden])
-		
-		# decrease by one
-		clado_events[++ne] <- [idx_hidden, idx_hidden - 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden - 1]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])
-		
-		# polyploidization
-		clado_events[++ne] <- [idx_hidden, i + i + 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_polyploid / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, i + i + 1]
-		clado_probs[ne]    := Probability(0.5 * clado_polyploid / lambda[idx_hidden])
-
-		# transition between hidden states
-        clado_events[++ne] <- [idx_hidden, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-
 	} else if ( i < k ) { # fission but no polyploidy
 		
 		# compute the total rate
@@ -244,38 +164,6 @@ for(i in 1:k) { # this index is the number of chromosomes
 		clado_events[++ne] <- [idx, idx, idx - 1]
 		clado_probs[ne]    := Probability(0.5 * clado_fusion_a / lambda[idx])		
 
-		# transition between hidden states
-        clado_events[++ne] <- [idx, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-        clado_events[++ne] <- [idx, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-
-		# HIDDEN
-		# compute the total rate
-		lambda[idx_hidden] := abs(clado_no_change_b + clado_fission_b + clado_fusion_b + chi)
-
-		# no change
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden]
-		clado_probs[ne]    := Probability(clado_no_change_b / lambda[idx_hidden])
-
-		# increase by one
-		clado_events[++ne] <- [idx_hidden, idx_hidden + 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_fission_b / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden + 1]
-		clado_probs[ne]    := Probability(0.5 * clado_fission_b / lambda[idx_hidden])
-		
-		# decrease by one
-		clado_events[++ne] <- [idx_hidden, idx_hidden - 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden - 1]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])	
-
-		# transition between hidden states
-        clado_events[++ne] <- [idx_hidden, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-
 	} else { # maximum state -- no fission or polyploidy
 
 		# compute the total rate
@@ -291,45 +179,19 @@ for(i in 1:k) { # this index is the number of chromosomes
 		clado_events[++ne] <- [idx, idx, idx - 1]
 		clado_probs[ne]    := Probability(0.5 * clado_fusion_a / lambda[idx])	
 
-		# transition between hidden states
-        clado_events[++ne] <- [idx, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-        clado_events[++ne] <- [idx, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx])
-
-		# HIDDEN	
-		# compute the total rate
-		lambda[idx_hidden] := abs(clado_no_change_b + clado_fusion_b + chi)
-
-		# no change
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden]
-		clado_probs[ne]    := Probability(clado_no_change_b / lambda[idx_hidden])
-		
-		# decrease by one
-		clado_events[++ne] <- [idx_hidden, idx_hidden - 1, idx_hidden]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])
-		clado_events[++ne] <- [idx_hidden, idx_hidden, idx_hidden - 1]
-		clado_probs[ne]    := Probability(0.5 * clado_fusion_b / lambda[idx_hidden])		
-
-		# transition between hidden states
-        clado_events[++ne] <- [idx_hidden, idx, idx_hidden]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
-        clado_events[++ne] <- [idx_hidden, idx_hidden, idx]
-        clado_probs[ne]    := Probability(0.5 * chi / lambda[idx_hidden])
 	}
 
 }
 
-
 # map the speciation rates to chromosome cladogenetic events
-omega := fnCladogeneticProbabilityMatrix(clado_events, clado_probs, 2*k + 2)
+omega := fnCladogeneticProbabilityMatrix(clado_events, clado_probs, k + 1)
 
 # diversification parameters
 # total_speciation := clado_no_change + clado_fission + clado_fusion + clado_polyploid + clado_demipoly
 turnover ~ dnExponential(speciation_pr)
 turnover.setValue(0.9)
 moves[++mvi] = mvScale(turnover, lambda=0.1)
-for (i in 1:(2*k + 2)) {
+for (i in 1:(k + 1)) {
     mu[i] := turnover
 }
 
@@ -342,9 +204,8 @@ moves[mvi].addVariable(total_speciation, up=true)
 moves[mvi].addVariable(delta_a, up=true)
 
 frac <- 0.5
-root_freq_abs <-  rep(1, 2 * k + 2)
+root_freq_abs <-  rep(1, k + 1)
 root_freq_abs[1] <- 0
-root_freq_abs[1 + k + 1] <- 0
 root_frequencies <- simplex(root_freq_abs)
 # root_frequencies <- simplex(rep(1, 2 * k + 2))
 condition        <- "time"
@@ -360,8 +221,8 @@ x ~ dnGLHBDSP(rootAge   = age,
               rho       = frac,
               condition = condition,
               taxa      = taxa,
-              nStates   = 2 * (k + 1),
-              nProc     = 3,
+              nStates   = k + 1,
+              nProc     = 4,
 		      zeroIndex = FALSE)
 print("Marker 5… GLHBDSP")
 

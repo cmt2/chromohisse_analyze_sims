@@ -1,0 +1,26 @@
+{
+    "id": "3E37C558",
+    "path": "~/repos/chromohisse_analyze_sims/scripts/make_slurms_chromosse.R",
+    "project_path": "scripts/make_slurms_chromosse.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1721929259191.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "32,59",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1721929282,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1721929282937,
+    "read_only": false,
+    "read_only_alternatives": []
+}
