@@ -19,10 +19,10 @@ cd /home/$USER/chromohisse_analyze_sims/
 
 # runs
 # (assume 4 core each)
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_61.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_62.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_63.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_64.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_65.Rev;
+/home/$USER/revbayes/projects/cmake/rb chromosse_jobs/job_61.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromosse_jobs/job_62.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromosse_jobs/job_63.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromosse_jobs/job_64.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromosse_jobs/job_65.Rev;
 
 wait;

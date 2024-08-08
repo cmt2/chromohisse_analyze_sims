@@ -4,7 +4,7 @@ jobs <- 1:100
 num_slurms <- length(jobs) / num_jobs_per_slurm
 
 # read template
-template <- readLines("scripts/slurm_template.sh")
+template <- readLines("scripts/slurm_sse_template.sh")
 
 # create job scripts
 for (i in 1:num_slurms) {
