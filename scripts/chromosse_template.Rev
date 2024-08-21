@@ -67,6 +67,7 @@ speciation_pr <- 1 / speciation_mean
 # Each cladogenetic event type is assigned its own speciation rate
 
 total_speciation ~ dnExponential(speciation_pr)
+total_speciation ~ dnExponential(speciation_pr)
 moves[++mvi] = mvScale(total_speciation, lambda=0.1)
 
 relative_clado ~ dnDirichlet([1,1,1])
@@ -203,7 +204,7 @@ moves[++mvi] = mvUpDownScale(weight=1, lambda=0.1)
 moves[mvi].addVariable(total_speciation, up=true)
 moves[mvi].addVariable(delta_a, up=true)
 
-frac <- 0.5
+frac <- 1.0
 root_freq_abs <-  rep(1, k + 1)
 root_freq_abs[1] <- 0
 root_frequencies <- simplex(root_freq_abs)
