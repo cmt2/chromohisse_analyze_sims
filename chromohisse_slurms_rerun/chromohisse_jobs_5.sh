@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=med2
 #SBATCH --account=brannalagrp
-#SBATCH --job-name=chromohisse_2
+#SBATCH --job-name=chromohisse_5
 #SBATCH --output=slurm-%x.out
 #SBATCH --mail-user=mikeryanmay@gmail.edu
 #SBATCH --mail-type=ALL
@@ -19,10 +19,9 @@ cd /home/$USER/chromohisse_analyze_sims/
 
 # runs
 # (assume 4 core each)
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_17.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_18.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_31.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_36.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_37.Rev;
+/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_72.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_91.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_95.Rev &
+/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_100.Rev;
 
 wait;

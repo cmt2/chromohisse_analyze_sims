@@ -47,9 +47,8 @@ for(this_run in runs) {
 }
 
 
-incomplete_runs <- runs[incomplete_runs]
-
 # settings
+incomplete_runs <- runs[incomplete_runs]
 num_jobs_per_slurm <- 5
 num_slurms <- ceiling(length(incomplete_runs) / num_jobs_per_slurm)
 
