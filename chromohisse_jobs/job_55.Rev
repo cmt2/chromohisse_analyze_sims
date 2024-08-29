@@ -412,7 +412,7 @@ my_mcmc = mcmc(my_model, monitors, moves)
 print("Marker 11… my_mcmc")
 
 # my_mcmc.initializeFromCheckpoint("output/chromohisse_dryopt_hidden_mrm.state") # to restart from checkpoint
-my_mcmc.burnin(1000, tuningInterval=50)
-my_mcmc.run(generations=25000)
+my_mcmc.burnin(1000, tuningInterval = 50)
+my_mcmc.run(generations = 50000)
 
 q()
