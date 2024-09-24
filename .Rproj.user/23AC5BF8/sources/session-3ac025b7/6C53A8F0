@@ -1,0 +1,26 @@
+{
+    "id": "6C53A8F0",
+    "path": "~/repos/chromohisse_analyze_sims/scripts/make_slurms_chromosse_low_mu.R",
+    "project_path": "scripts/make_slurms_chromosse_low_mu.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1727198003475.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "32,35",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1727198027,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1727198027763,
+    "read_only": false,
+    "read_only_alternatives": []
+}
