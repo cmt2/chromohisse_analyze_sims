@@ -6,7 +6,7 @@
 #SBATCH --mail-user=mikeryanmay@gmail.edu
 #SBATCH --mail-type=ALL
 #SBATCH --nodes=1
-#SBATCH --ntasks=20
+#SBATCH --ntasks=4
 #SBATCH --time=168:00:00
 
 # load dependencies
@@ -19,10 +19,6 @@ cd /home/$USER/chromohisse_analyze_sims/
 
 # runs
 # (assume 4 core each)
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_1.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_2.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_3.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_4.Rev &
-/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_5.Rev;
+/home/$USER/revbayes/projects/cmake/rb chromohisse_jobs/job_18.Rev;
 
 wait;
