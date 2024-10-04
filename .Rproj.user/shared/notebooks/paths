@@ -5,7 +5,7 @@
 /Users/mike/repos/chromohisse_analyze_sims/scripts/make_slurms_chromosse_low_mu.R="A5BF8A24"
 /Users/mike/repos/chromohisse_analyze_sims/scripts/posterior_boxplot.R="99CE9195"
 /Users/mike/repos/chromohisse_analyze_sims/scripts/remake_slurms_chromohisse.R="362693C8"
-/Users/mike/repos/chromohisse_analyze_sims/scripts/summarize_chromohisse_results.R="807A20E6"
+/Users/mike/repos/chromohisse_analyze_sims/scripts/summarize_chromohisse_results_high_mu.R="83C42533"
 /Users/mike/repos/chromohisse_analyze_sims/scripts/summarize_chromohisse_results_low_mu.R="6DCE3041"
 /Users/mike/repos/chromohisse_simulator/chromohisse_standard.R="1C4F8A72"
 /Users/mike/repos/chromohisse_simulator/src/simulate.R="50F414B6"
