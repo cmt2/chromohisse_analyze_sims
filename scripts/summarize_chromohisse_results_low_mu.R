@@ -95,7 +95,7 @@ chromohisse_results <- do.call(rbind, lapply(chromohisse_output_fn, function(x) 
 
 pdf("figures/chromohisse_boxplots_low_mu.pdf", height = 14, width = 10)
 
-layout_mat <- matrix(1:(length(params) + 6), ncol = 2, byrow = TRUE)
+layout_mat <- matrix(1:(length(params) + 4), ncol = 2, byrow = TRUE)
 par(oma = c(0,5,3,0) + 0.1, mar = c(0,0,0,0))
 layout(layout_mat)
 
@@ -141,14 +141,6 @@ mtext("clado_fusion", side = 2, line = 3)
 boxplot.HPD(chromohisse_results[,"clado_fusion_b"], outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0,1.25))
 abline(h = true_values["clado_fusion_b"], lty = 2, col = "red")
 
-boxplot.HPD(chromohisse_results[,"clado_fusion_a"], outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0,1.25))
-abline(h = true_values["clado_fusion_a"], lty = 2, col = "red")
-axis(2, las = 2, lwd = 0, lwd.tick = 1)
-mtext("clado_fusion", side = 2, line = 3)
-
-boxplot.HPD(chromohisse_results[,"clado_fusion_b"], outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0,1.25))
-abline(h = true_values["clado_fusion_b"], lty = 2, col = "red")
-
 boxplot.HPD(chromohisse_results[,"clado_fission_a"], outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0,1.25))
 abline(h = true_values["clado_fission_a"], lty = 2, col = "red")
 axis(2, las = 2, lwd = 0, lwd.tick = 1)
@@ -178,6 +170,83 @@ plot.new()
 
 dev.off()
 
+
+pdf("figures/chromohisse_boxplots_low_mu_relative.pdf", height = 14, width = 10)
+
+layout_mat <- matrix(1:(length(params) + 4), ncol = 2, byrow = TRUE)
+par(oma = c(0,5,3,0) + 0.1, mar = c(0,0,0,0))
+layout(layout_mat)
+
+# gamma
+boxplot.HPD(lapply(chromohisse_results[,"gamma_a"], function(x) x / true_values["gamma_a"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2.5))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("gamma", side = 2, line = 3)
+mtext("hidden state A", side = 3, line = 1)
+
+boxplot.HPD(lapply(chromohisse_results[,"gamma_b"], function(x) x / true_values["gamma_b"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2.5))
+abline(h = 1, lty = 2, col = "red")
+mtext("hidden state B", side = 3, line = 1)
+
+boxplot.HPD(lapply(chromohisse_results[,"delta_a"], function(x) x / true_values["delta_a"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2.5))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("delta", side = 2, line = 3)
+
+boxplot.HPD(lapply(chromohisse_results[,"delta_b"], function(x) x / true_values["delta_b"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2.5))
+abline(h = 1, lty = 2, col = "red")
+
+boxplot.HPD(lapply(chromohisse_results[,"alpha"], function(x) x / true_values["alpha"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 10))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("alpha", side = 2, line = 3)
+
+plot.new()
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_no_change_a"], function(x) x / true_values["clado_no_change_a"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 5))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("clado_no_change", side = 2, line = 3)
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_no_change_b"], function(x) x / true_values["clado_no_change_b"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 5))
+abline(h = 1, lty = 2, col = "red")
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_fusion_a"], function(x) x / true_values["clado_fusion_a"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 4))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("clado_fusion", side = 2, line = 3)
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_fusion_b"], function(x) x / true_values["clado_fusion_b"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 4))
+abline(h = 1, lty = 2, col = "red")
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_fission_a"], function(x) x / true_values["clado_fission_a"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 4))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("clado_fission", side = 2, line = 3)
+
+boxplot.HPD(lapply(chromohisse_results[,"clado_fission_b"], function(x) x / true_values["clado_fission_b"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 4))
+abline(h = 1, lty = 2, col = "red")
+
+boxplot.HPD(lapply(chromohisse_results[,"chi"], function(x) x / true_values["chi"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 4))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("chi", side = 2, line = 3)
+plot.new()
+
+boxplot.HPD(lapply(chromohisse_results[,"total_speciation"], function(x) x / true_values["total_speciation"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("total_speciation", side = 2, line = 3)
+plot.new()
+
+boxplot.HPD(lapply(chromohisse_results[,"turnover"], function(x) x / true_values["turnover"]), outline = FALSE, xaxt = "n", yaxt = "n", ylim = c(0, 2))
+abline(h = 1, lty = 2, col = "red")
+axis(2, las = 2, lwd = 0, lwd.tick = 1)
+mtext("turnover", side = 2, line = 3)
+axis(1, las = 2, lwd = 0, )
+plot.new()
+
+dev.off()
 
 
 ##################################
